@@ -82,7 +82,7 @@ where
 	/// [`ChannelManager`]: lightning::ln::channelmanager::ChannelManager
 	/// [`Filter`]: lightning::chain::Filter
 	#[maybe_async]
-	pub fn sync(&self, confirmables: Vec<&(dyn Confirm + Sync + Send)>) -> Result<(), TxSyncError> {
+	pub fn sync(&self, confirmables: Vec<&(dyn Confirm)>) -> Result<(), TxSyncError> {
 		// This lock makes sure we're syncing once at a time.
 		#[cfg(not(feature = "async-interface"))]
 		let mut sync_state = self.sync_state.lock().unwrap();
@@ -181,7 +181,7 @@ where
 
 	#[maybe_async]
 	fn sync_best_block_updated(
-		&self, confirmables: &Vec<&(dyn Confirm + Sync + Send)>, tip_hash: &BlockHash,
+		&self, confirmables: &Vec<&(dyn Confirm)>, tip_hash: &BlockHash,
 	) -> Result<(), InternalError> {
 
 		// Inform the interface of the new block.
@@ -200,7 +200,7 @@ where
 	}
 
 	fn sync_confirmed_transactions(
-		&self, sync_state: &mut SyncState, confirmables: &Vec<&(dyn Confirm + Sync + Send)>, confirmed_txs: Vec<ConfirmedTx>,
+		&self, sync_state: &mut SyncState, confirmables: &Vec<&(dyn Confirm)>, confirmed_txs: Vec<ConfirmedTx>,
 	) {
 		for ctx in confirmed_txs {
 			for c in confirmables {
@@ -309,7 +309,7 @@ where
 
 	#[maybe_async]
 	fn get_unconfirmed_transactions(
-		&self, confirmables: &Vec<&(dyn Confirm + Sync + Send)>,
+		&self, confirmables: &Vec<&(dyn Confirm)>,
 	) -> Result<Vec<Txid>, InternalError> {
 		// Query the interface for relevant txids and check whether the relevant blocks are still
 		// in the best chain, mark them unconfirmed otherwise
@@ -338,7 +338,7 @@ where
 	}
 
 	fn sync_unconfirmed_transactions(
-		&self, sync_state: &mut SyncState, confirmables: &Vec<&(dyn Confirm + Sync + Send)>, unconfirmed_txs: Vec<Txid>,
+		&self, sync_state: &mut SyncState, confirmables: &Vec<&(dyn Confirm)>, unconfirmed_txs: Vec<Txid>,
 	) {
 		for txid in unconfirmed_txs {
 			for c in confirmables {
