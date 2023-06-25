@@ -833,8 +833,7 @@ pub enum Event {
 	/// Indicates that a transaction originating from LDK needs to have its fee bumped. This event
 	/// requires confirmed external funds to be readily available to spend.
 	///
-	/// LDK does not currently generate this event. It is limited to the scope of channels with
-	/// anchor outputs, which will be introduced in a future release.
+	/// It is limited to the scope of channels with anchor outputs.
 	BumpTransaction(BumpTransactionEvent),
 }
 
